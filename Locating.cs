@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +13,6 @@ public class Locating : MonoBehaviour
 
 	void Start ()
 	{
-		textState.text = "";
 		StartCoroutine ("DetectCountry");
 	}
 
@@ -21,19 +20,19 @@ public class Locating : MonoBehaviour
 	{
 		UnityWebRequest request = UnityWebRequest.Get ("https://extreme-ip-lookup.com/json");
 		request.chunkedTransfer = false;
-		yield return request.Send ();
 		textState.text = "Locating...";
-
-		if (request.isError) {
-			textState.text = "error : " + request.error;
-		} else {
-			if (request.isDone) {
-				Country res = JsonUtility.FromJson<Country> (request.downloadHandler.text);
-				textState.text = "";
-				textContinent.text = res.continent;
-				textCity.text = res.city;
-				textCountry.text = res.country;
-			}
+		yield return request.SendWebRequest();
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    textState.text = "error : " + request.error;
+                }
+		else
+		{
+			Country res = JsonUtility.FromJson<Country> (request.downloadHandler.text);
+			textState.text = "";
+			textContinent.text = res.continent;
+			textCity.text = res.city;
+			textCountry.text = res.country;
 		}
 	}
 }
