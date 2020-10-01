@@ -19,7 +19,6 @@ public class Locating : MonoBehaviour
 	IEnumerator DetectCountry ()
 	{
 		UnityWebRequest request = UnityWebRequest.Get ("https://extreme-ip-lookup.com/json");
-		request.chunkedTransfer = false;
 		textState.text = "Locating...";
 		yield return request.SendWebRequest();
                 if (request.isNetworkError || request.isHttpError)
